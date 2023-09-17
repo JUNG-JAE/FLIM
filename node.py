@@ -26,11 +26,12 @@ class Node:
         self.optimizer =optim.Adam(self.model.parameters(), lr=settings.LEARNING_RATE)
         self.train_loader, self.test_loader = node_dataloader(self.args, self.node_id)
         self.device = torch.device('cuda' if args.gpu else 'cpu')
+        self.recv_status = True
 
     def train(self):
         self.model.train()
-        rand_epoch = 1
-        # rand_epoch = random.randint(settings.INF_EPOCH, settings.SUP_EPOCH)
+        # rand_epoch = 0
+        rand_epoch = random.randint(settings.INF_EPOCH, settings.SUP_EPOCH)
         print_log(self.logger, f"Training epoch: {rand_epoch}")
         
         avg_train_loss = 0.0

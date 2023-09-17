@@ -50,3 +50,13 @@ def poisson_distribution(n_node:int) -> list:
     TRANSACTION_PER_MINUTE = LAMBDA * n_node
     
     return [np.random.poisson(TRANSACTION_PER_MINUTE) for _ in range(settings.SIMULATION_TIME)]
+
+def flatten_tuple(tup):
+    result = []
+    for item in tup:
+        if isinstance(item, tuple):
+            result.extend(flatten_tuple(item))
+        else:
+            result.append(item)
+    return result
+

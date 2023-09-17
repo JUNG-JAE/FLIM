@@ -13,7 +13,7 @@ from collections import defaultdict
 # ------------ Custom library ------------ #
 from node import Node
 from conf import settings
-from utils_system import poisson_distribution, set_logger, slicer, create_directory, format_title, format_time_title, print_log
+from utils_system import poisson_distribution, set_logger, slicer, create_directory, format_title, format_time_title, print_log, flatten_tuple
 from utils_learning import set_seed, save_model, models_to_matrix, aggregation, cosine_similarity_between_models
 
 
@@ -34,7 +34,8 @@ def nodes_broadcast(part_node, n_peer_set):
         # print(f"Filtered nodes: {[node.node_id for node in filtered_nodes]}")
         # recv_node = random.sample([node for node in filtered_nodes if node != bcast_node], min(n_peer_set, len(filtered_nodes)-1))
         # recv_node = random.sample([node for node in part_node if node != bcast_node], n_peer_set)
-        filtered_nodes = [node for node in part_node if len(node.other_models) < settings.SUP_OTHER_MODEL_SIZE and node != bcast_node]
+        # filtered_nodes = [node for node in part_node if len(node.other_models) < settings.SUP_OTHER_MODEL_SIZE and node != bcast_node]
+        filtered_nodes = [node for node in part_node if node.recv_status and node != bcast_node]
         # print(f"Filtered nodes: {[node.node_id for node in filtered_nodes]}")
         recv_node = random.sample(filtered_nodes, min(n_peer_set, len(filtered_nodes)))
         
@@ -83,11 +84,8 @@ def model_clustering(args, logger, base_path, minute, node, part_node, received_
     if recv_models:            
         # Combine prior node_ids and received node_ids
         all_node_ids = list(node.other_models.keys()) + list(recv_models.keys())
-        all_node_ids = [item for sublist in all_node_ids for item in (sublist if isinstance(sublist, tuple) else [sublist])]  # Flatten the list
-    
-        # Flatten the models from node.other_models and combine with recv_models
-        all_models = [model for sublist in node.other_models.values() for model in sublist] + list(recv_models.values())
-    
+        all_models = list(node.other_models.values()) + list(recv_models.values())
+        
         # Create a similarity matrix and perform clustering
         model_matrix = models_to_matrix(all_models)
         similarity_matrix = cosine_similarity(model_matrix)
@@ -98,17 +96,23 @@ def model_clustering(args, logger, base_path, minute, node, part_node, received_
         clustered_data = {}
         for save_order, cluster_label in enumerate(np.unique(db.labels_)):
             indices = np.where(db.labels_ == cluster_label)[0].tolist()
-            clustered_node_ids = [all_node_ids[idx] for idx in indices]
+            
+            clustered_node_ids = [all_node_ids[idx] for idx in indices]            
             clustered_models = [all_models[idx] for idx in indices]
-            print_log(logger, f"Clustered nodes: {clustered_node_ids}")
+            
+            flat_clustered_node_ids = flatten_tuple(clustered_node_ids)
+            print_log(logger, f"{save_order} Clustered nodes: {flat_clustered_node_ids}")
+
             agg_model =aggregation(args, clustered_models)
             save_model(base_path, minute, agg_model, f"{node.node_id}_other_{save_order}")
-            clustered_data[tuple(clustered_node_ids)] = [agg_model]
-        
+            clustered_data[tuple(clustered_node_ids)] = agg_model
+            
         # Update node's other_models with the new clustered data
         node.other_models = clustered_data
-        # print(f"keys: {node.other_models.keys()}")
-        # print(len(node.other_models))   
+        
+    if len(node.other_models) > settings.SUP_OTHER_MODEL_SIZE:
+        node.recv_status = False
+    
     print_log(logger, " ")
 
 def main():
@@ -122,7 +126,7 @@ def main():
     args = parser.parse_args()
 
     # Set base path and logger
-    BASE_PATH = f'{settings.LOG_DIR}/{slicer(args.dataset)}_node{args.n_node}_Brate{str(args.b_rate).replace(".", "")}_Stask{settings.SUP_OTHER_MODEL_SIZE}_epoch_{settings.INF_EPOCH}_{settings.SUP_EPOCH}_batch{settings.BATCH_SIZE}'
+    BASE_PATH = f'{settings.LOG_DIR}/{slicer(args.dataset)}_node{args.n_node}_Brate{str(args.b_rate).replace(".", "")}_Srate{str(args.sim_th).replace(".", "")}_Stask{settings.SUP_OTHER_MODEL_SIZE}_epoch_{settings.INF_EPOCH}_{settings.SUP_EPOCH}_batch{settings.BATCH_SIZE}'
     logger = set_logger(BASE_PATH)
     
     # Generate nodes
@@ -134,13 +138,15 @@ def main():
     for minute, n_part_node in enumerate(poisson, start=1):
         print_log(logger, format_time_title(f"Time {minute}/min"))
         
-        exceeding_nodes = [node.node_id for node in nodes if len(node.other_models) >= settings.SUP_OTHER_MODEL_SIZE]
+        # exceeding_nodes = [node.node_id for node in nodes if len(node.other_models) >= settings.SUP_OTHER_MODEL_SIZE]
+        exceeding_nodes = [node.node_id for node in nodes if node.recv_status == False]
         print_log(logger, f"Exceeding nodes: {exceeding_nodes}")
 
         # Check if all nodes' other_models length is greater than or equal to settings.SUP_OTHER_MODEL_SIZE
         if len(exceeding_nodes) == len(nodes):
             print_log(logger, f"All nodes.other_models have greater than the SUP_OTHER_MODEL_SIZE!({settings.SUP_OTHER_MODEL_SIZE})")
-            sys.exit()
+            raise ValueError(" ")
+            # sys.exit()
 
         # part_node = random.sample(filtered_nodes, min(n_part_node, len(filtered_nodes)))
         part_node = random.sample(nodes, n_part_node)
