@@ -11,13 +11,13 @@ Distributed federated learning is an attractive approach for privacy-preserving 
 - Demonstrates strong robustness in difficult distributed environments, outperforming multiple federated learning baselines under severe non-IID settings.
 
 ### Architecture
-Figure link
+<img width="4097" height="2048" alt="그림1" src="https://github.com/user-attachments/assets/06687bc4-c3e7-46b2-8abd-ad02b706622c" />
 
 - **Expert trainer node**: Responsible for training and distributing experts, and is assumed to have access to only a portion of labeled data.
 - **User**: Collects the distributed experts and builds a Mixture-of-Experts model, and is assumed to have access only to unlabeled data.
 
 ### Proposed Algorithm
-Figure link
+<img width="4074" height="2090" alt="2" src="https://github.com/user-attachments/assets/c294be6a-1a0e-404e-9db5-3a5b49aab89c" />
 
 - An algorithm based on Bayesian optimization and self-supervised learning.
 
@@ -25,6 +25,7 @@ Figure link
 
 | **IID** | **Non-IID** | **Pathological non-IID** |
 | :---: | :---: | :---: |
+| <img width="354" height="237" alt="IID" src="https://github.com/user-attachments/assets/d7406c62-7441-4360-aa77-9c611056d7c5" /> | <img width="354" height="237" alt="Non-IID-smll" src="https://github.com/user-attachments/assets/e86254ef-e231-4301-bb68-df16fe13d397" /> | <img width="355" height="237" alt="extre non-IID" src="https://github.com/user-attachments/assets/13a9392e-2b2d-468d-9200-b56814d0f998" /> |
 | 이미지 링크 | 이미지 링크 | 이미지 링크 |
 
 
