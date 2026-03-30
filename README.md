@@ -26,8 +26,6 @@ Distributed federated learning is an attractive approach for privacy-preserving 
 | **IID** | **Non-IID** | **Pathological non-IID** |
 | :---: | :---: | :---: |
 | <img width="354" height="237" alt="IID" src="https://github.com/user-attachments/assets/d7406c62-7441-4360-aa77-9c611056d7c5" /> | <img width="354" height="237" alt="Non-IID-smll" src="https://github.com/user-attachments/assets/e86254ef-e231-4301-bb68-df16fe13d397" /> | <img width="355" height="237" alt="extre non-IID" src="https://github.com/user-attachments/assets/13a9392e-2b2d-468d-9200-b56814d0f998" /> |
-| 이미지 링크 | 이미지 링크 | 이미지 링크 |
-
 
 ### Data settings
 - **IID**: Data is evenly distributed across clients using a normal distribution.
