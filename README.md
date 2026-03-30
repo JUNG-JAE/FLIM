@@ -1,4 +1,4 @@
-# SOMFed: A Self-Organized MoE Framework for Distributed Federated Learning
+# A Self-Organized MoE Framework for Distributed Federated Learning
 
 ## Overview
 Distributed federated learning is an attractive approach for privacy-preserving collaboration without relying on a central server, but its performance often degrades under asynchronous updates and highly non-IID local data. Existing approaches often compress diverse client knowledge into a single shared model, which can reduce specialization and lead to performance loss in heterogeneous environments. To address this limitation, the proposed framework uses multiple models, allowing each node to construct a personalized model. The proposed MASS procedure uses self-supervised signals to identify suitable experts even when only unlabeled local data is available. Experiments show that the framework remains robust under challenging heterogeneous settings, including pathological non-IID scenarios on CIFAR10.
