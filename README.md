@@ -23,9 +23,10 @@ Figure link
 
 ## Performance under data distribution
 
+| **IID** | **Non-IID** | **Pathological non-IID** |
 | :---: | :---: | :---: |
 | 이미지 링크 | 이미지 링크 | 이미지 링크 |
-| **IID** | **Non-IID** | **Pathological non-IID** |
+
 
 ### Data settings
 - **IID**: Data is evenly distributed across clients using a normal distribution.
