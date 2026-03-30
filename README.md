@@ -24,7 +24,7 @@ Figure link
 ## Performance under data distribution
 
 | :---: | :---: | :---: |
-| ![Model Poisoning Accuracy](https://github.com/user-attachments/assets/d8b90c7b-7c32-485f-85af-0f98ee621bd5) | ![Data Poisoning Accuracy](https://github.com/user-attachments/assets/9e24dbde-eea3-499e-8409-73aaa81d9b74) | ![Label Swapping Accuracy](https://github.com/user-attachments/assets/452533ff-879b-4118-9465-ef3423f07330) |
+| 이미지 링크 | 이미지 링크 | 이미지 링크 |
 | **IID** | **Non-IID** | **Pathological non-IID** |
 
 ### Data settings
