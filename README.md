@@ -38,6 +38,7 @@ The uploaded code is a simplified version of the experimental simulator used in 
 
 - **FLIM_discrete**: A tick-based discrete simulator that generates events based on a Poisson process.
 - **FLIM_continuous**: A SimPy-based continuous simulator that generates events based on an exponential process.
+- **FLIM_integrate**: Integrated version of the Simulator, MASS, and CLA
 - **GateModule**: The gating module for the Mixture-of-Experts model.
 - **PASS**: Includes the MASS algorithm and CLA.
 

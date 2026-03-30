@@ -1,0 +1,15 @@
+numpy
+pandas
+scipy
+scikit-learn
+scikit-image
+matplotlib
+Pillow
+tqdm
+joblib
+optuna
+scikit-optimize
+openpyxl
+torch
+torchvision
+simpy
